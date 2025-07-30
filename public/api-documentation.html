@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSAZ Medical Records API Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+        .endpoint {
+            background: #ecf0f1;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get { background: #27ae60; }
+        .post { background: #f39c12; }
+        .put { background: #8e44ad; }
+        .delete { background: #e74c3c; }
+        code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 RSAZ Medical Records API Documentation</h1>
+        
+        <div class="info">
+            <strong>Base URL:</strong> <code>http://apirshaa.test/api</code><br>
+            <strong>Database:</strong> rsaz_sik (192.168.0.3:3939)<br>
+            <strong>Authentication:</strong> Bearer Token Required<br>
+            <strong>Content-Type:</strong> application/json
+        </div>
+
+        <div class="toc">
+            <h3>📋 Table of Contents</h3>
+            <ul>
+                <li><a href="#authentication">1. Authentication</a>
+                    <ul>
+                        <li>1.1 Generate Token</li>
+                        <li>1.2 Check Token Status</li>
+                    </ul>
+                </li>
+                <li><a href="#endpoints">2. API Endpoints</a>
+                    <ul>
+                        <li><a href="#pegawai">2.1 Pegawai (Employee Data)</a></li>
+                        <li><a href="#rawat-inap">2.2 Rawat Inap Dokter (Inpatient Doctor Care)</a></li>
+                        <li><a href="#rawat-jalan">2.3 Rawat Jalan Dokter (Outpatient Doctor Care)</a></li>
+                        <li><a href="#jns-perawatan-inap">2.4 Jenis Perawatan Inap (Inpatient Care Types)</a></li>
+                        <li><a href="#jns-perawatan">2.5 Jenis Perawatan (Care Types)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#errors">3. Error Handling</a></li>
+                <li><a href="#examples">4. Postman Examples</a></li>
+            </ul>
+        </div>
+
+        <h2 id="authentication">🔐 1. Authentication</h2>
+        
+        <h3>Generate Token</h3>
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/token/generate</code>
+        </div>
+
+        <p><strong>Request Body:</strong></p>
+        <div class="code-block">
+{
+    "admin_key": "rsaz_admin_2025"
+}
+        </div>
+
+        <p><strong>Response:</strong></p>
+        <div class="code-block">
+{
+    "success": true,
+    "message": "Token generated successfully",
+    "token": "eyJ0aW1lc3RhbXAiOjE3MjI0MjE4MDAsInJhbmRvbSI6ImFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2Nzg5MCIsInNlY3JldCI6InlvdXJfc2VjcmV0X2tleV9oZXJlIn0",
+    "expires_at": "2025-08-30T12:00:00.000000Z",
+    "expires_in": "30 days (1 month)",
+    "usage": "Include this token in Authorization header as: Bearer {token}"
+}
+        </div>
+
+        <h3>Check Token Status</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/token/check</code>
+        </div>
+
+        <p><strong>Headers:</strong></p>
+        <div class="code-block">
+Authorization: Bearer {your_token}
+        </div>
+
+        <p><strong>Response (Valid Token):</strong></p>
+        <div class="code-block">
+{
+    "success": true,
+    "message": "Token is valid",
+    "valid": true,
+    "type": "expiring",
+    "expires_at": "2025-08-30 12:00:00",
+    "current_time": "2025-07-30 12:00:00",
+    "time_remaining": "2592000 seconds"
+}
+        </div>
+
+        <p><strong>Response (Expired Token):</strong></p>
+        <div class="code-block">
+{
+    "success": true,
+    "message": "Token is expired",
+    "valid": false,
+    "type": "expiring",
+    "expires_at": "2025-07-29 12:00:00",
+    "current_time": "2025-07-30 12:00:00",
+    "time_remaining": "0 seconds"
+}
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Important:</strong> All API endpoints require authentication. Include the token in the Authorization header:
+            <br><code>Authorization: Bearer {your_generated_token}</code>
+            <br><br><strong>Note:</strong> Tokens expire after 1 month. You will need to generate a new token when it expires.
+        </div>
+
+        <h2 id="endpoints">🌐 2. API Endpoints</h2>
+
+        <h3 id="pegawai">👤 2.1 Pegawai (Employee Data)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/pegawai?nik={nik}</code>
+        </div>
+
+        <p><strong>Description:</strong> Retrieve employee data by NIK (Employee ID)</p>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>nik</td>
+                <td>string</td>
+                <td>Yes</td>
+                <td>Employee identification number</td>
+            </tr>
+        </table>
+
+        <p><strong>Example Request:</strong></p>
+        <div class="code-block">
+GET /api/pegawai?nik=123456789
+Authorization: Bearer {your_generated_token}
+        </div>
+
+        <p><strong>Example Response:</strong></p>
+        <div class="code-block">
+{
+    "success": true,
+    "message": "Data pegawai retrieved successfully",
+    "data": {
+        "id": 1,
+        "nik": "123456789",
+        "nama": "Dr. John Doe",
+        "jk": "Pria",
+        "jbtn": "Dokter Spesialis",
+        "departemen": "0001",
+        "bidang": "Kardiologi",
+        "stts_aktif": "AKTIF",
+        ...
+    }
+}
+        </div>
+
+        <h3 id="rawat-inap">🏥 2.2 Rawat Inap Dokter (Inpatient Doctor Care)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/rawat-inap-dr?bulan={month}&tahun={year}</code>
+        </div>
+
+        <p><strong>Description:</strong> Retrieve inpatient doctor care data by month and year</p>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>bulan</td>
+                <td>integer</td>
+                <td>Yes</td>
+                <td>Month (1-12)</td>
+            </tr>
+            <tr>
+                <td>tahun</td>
+                <td>integer</td>
+                <td>Yes</td>
+                <td>Year (e.g., 2025)</td>
+            </tr>
+        </table>
+
+        <p><strong>Example Request:</strong></p>
+        <div class="code-block">
+GET /api/rawat-inap-dr?bulan=7&tahun=2025
+Authorization: Bearer {your_generated_token}
+        </div>
+
+        <h3 id="rawat-jalan">🚶 2.3 Rawat Jalan Dokter (Outpatient Doctor Care)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/rawat-jl-dr?bulan={month}&tahun={year}</code>
+        </div>
+
+        <p><strong>Description:</strong> Retrieve outpatient doctor care data by month and year</p>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>bulan</td>
+                <td>integer</td>
+                <td>Yes</td>
+                <td>Month (1-12)</td>
+            </tr>
+            <tr>
+                <td>tahun</td>
+                <td>integer</td>
+                <td>Yes</td>
+                <td>Year (e.g., 2025)</td>
+            </tr>
+        </table>
+
+        <p><strong>Example Request:</strong></p>
+        <div class="code-block">
+GET /api/rawat-jl-dr?bulan=7&tahun=2025
+Authorization: Bearer {your_generated_token}
+        </div>
+
+        <h3 id="jns-perawatan-inap">🏥 2.4 Jenis Perawatan Inap (Inpatient Care Types)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/jns-perawatan-inap</code>
+        </div>
+
+        <p><strong>Description:</strong> Retrieve all inpatient care types (no parameters required)</p>
+
+        <p><strong>Example Request:</strong></p>
+        <div class="code-block">
+GET /api/jns-perawatan-inap
+Authorization: Bearer {your_generated_token}
+        </div>
+
+        <h3 id="jns-perawatan">🩺 2.5 Jenis Perawatan (Care Types)</h3>
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/jns-perawatan</code>
+        </div>
+
+        <p><strong>Description:</strong> Retrieve all care types (no parameters required)</p>
+
+        <p><strong>Example Request:</strong></p>
+        <div class="code-block">
+GET /api/jns-perawatan
+Authorization: Bearer {your_generated_token}
+        </div>
+
+        <h2 id="errors">❌ 3. Error Handling</h2>
+
+        <h3>Common Error Responses</h3>
+
+        <h4>401 Unauthorized</h4>
+        <div class="code-block">
+{
+    "success": false,
+    "message": "Token is required. Please include Authorization header."
+}
+        </div>
+
+        <h4>401 Token Expired</h4>
+        <div class="code-block">
+{
+    "success": false,
+    "message": "Token has expired. Please generate a new token.",
+    "expired_at": "2025-08-30 12:00:00"
+}
+        </div>
+
+        <h4>400 Bad Request</h4>
+        <div class="code-block">
+{
+    "success": false,
+    "message": "Parameter NIK is required"
+}
+        </div>
+
+        <h4>404 Not Found</h4>
+        <div class="code-block">
+{
+    "success": false,
+    "message": "Data pegawai not found"
+}
+        </div>
+
+        <h4>500 Internal Server Error</h4>
+        <div class="code-block">
+{
+    "success": false,
+    "message": "Error retrieving data: Connection failed"
+}
+        </div>
+
+        <h2 id="examples">📝 4. Postman Examples</h2>
+
+        <h3>Setting up Postman</h3>
+
+        <div class="success">
+            <strong>Step 1: Create a New Collection</strong><br>
+            1. Open Postman<br>
+            2. Click "New" → "Collection"<br>
+            3. Name it "RSAZ Medical Records API"
+        </div>
+
+        <div class="success">
+            <strong>Step 2: Set Collection Variables</strong><br>
+            1. In your collection, go to "Variables" tab<br>
+            2. Add these variables:<br>
+            - <code>base_url</code>: <code>http://apirshaa.test/api</code><br>
+            - <code>token</code>: <code>{leave_empty_initially}</code><br>
+            3. Generate token first, then update the token variable
+        </div>
+
+        <div class="success">
+            <strong>Step 3: Set Collection Authorization</strong><br>
+            1. Go to "Authorization" tab<br>
+            2. Type: "Bearer Token"<br>
+            3. Token: <code>{{token}}</code>
+        </div>
+
+        <h3>Example Requests</h3>
+
+        <h4>1. Generate Token</h4>
+        <div class="code-block">
+POST {{base_url}}/token/generate
+Content-Type: application/json
+
+{
+    "admin_key": "rsaz_admin_2025"
+}
+        </div>
+
+        <h4>2. Check Token Status</h4>
+        <div class="code-block">
+GET {{base_url}}/token/check
+Authorization: Bearer {{token}}
+        </div>
+
+        <h4>3. Get Employee Data</h4>
+        <div class="code-block">
+GET {{base_url}}/pegawai?nik=123456789
+Authorization: Bearer {{token}}
+        </div>
+
+        <h4>4. Get Inpatient Data</h4>
+        <div class="code-block">
+GET {{base_url}}/rawat-inap-dr?bulan=7&tahun=2025
+Authorization: Bearer {{token}}
+        </div>
+
+        <h4>5. Get Outpatient Data</h4>
+        <div class="code-block">
+GET {{base_url}}/rawat-jl-dr?bulan=7&tahun=2025
+Authorization: Bearer {{token}}
+        </div>
+
+        <h4>6. Get Inpatient Care Types</h4>
+        <div class="code-block">
+GET {{base_url}}/jns-perawatan-inap
+Authorization: Bearer {{token}}
+        </div>
+
+        <h4>7. Get Care Types</h4>
+        <div class="code-block">
+GET {{base_url}}/jns-perawatan
+Authorization: Bearer {{token}}
+        </div>
+
+        <h4>8. Health Check</h4>
+        <div class="code-block">
+GET {{base_url}}/health
+        </div>
+
+        <div class="warning">
+            <strong>📱 Testing Tips:</strong><br>
+            1. Always include the Authorization header with Bearer token<br>
+            2. Use proper query parameters for filtering<br>
+            3. Check the response status and error messages<br>
+            4. Validate month (1-12) and year parameters<br>
+            5. NIK parameter is case-sensitive for employee search
+        </div>
+
+        <div class="info">
+            <strong>🔧 Troubleshooting:</strong><br>
+            • <strong>Connection Issues:</strong> Verify database connection (192.168.0.3:3939)<br>
+            • <strong>Token Issues:</strong> Regenerate token using /token/generate endpoint<br>
+            • <strong>No Data:</strong> Check if parameters match existing database records<br>
+            • <strong>500 Errors:</strong> Check server logs and database connectivity
+        </div>
+
+        <footer style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+            <p>RSAZ Medical Records API Documentation - Version 1.0</p>
+            <p>Generated on: July 30, 2025</p>
+        </footer>
+    </div>
+</body>
+</html>

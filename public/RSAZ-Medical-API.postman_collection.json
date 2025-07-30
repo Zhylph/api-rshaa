@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "rsaz-medical-api-collection",
+		"name": "RSAZ Medical Records API",
+		"description": "API Collection for accessing RSAZ medical records database",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://apirshaa.test/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Generate Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"admin_key\": \"rsaz_admin_2025\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/token/generate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"token",
+								"generate"
+							]
+						},
+						"description": "Generate API token for authentication with 1 month expiry"
+					},
+					"response": []
+				},
+				{
+					"name": "Check Token Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/token/check",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"token",
+								"check"
+							]
+						},
+						"description": "Check if token is still valid and see expiration details"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "API Health Status",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if API is running and database is connected"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee Data",
+			"item": [
+				{
+					"name": "Get Employee by NIK",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pegawai?nik=123456789",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pegawai"
+							],
+							"query": [
+								{
+									"key": "nik",
+									"value": "123456789",
+									"description": "Employee identification number"
+								}
+							]
+						},
+						"description": "Retrieve employee data by NIK (Employee ID). Replace 123456789 with actual NIK."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Medical Records",
+			"item": [
+				{
+					"name": "Get Inpatient Doctor Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rawat-inap-dr?bulan=7&tahun=2025",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rawat-inap-dr"
+							],
+							"query": [
+								{
+									"key": "bulan",
+									"value": "7",
+									"description": "Month (1-12)"
+								},
+								{
+									"key": "tahun",
+									"value": "2025",
+									"description": "Year"
+								}
+							]
+						},
+						"description": "Get inpatient doctor care records filtered by month and year"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Outpatient Doctor Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/rawat-jl-dr?bulan=7&tahun=2025",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rawat-jl-dr"
+							],
+							"query": [
+								{
+									"key": "bulan",
+									"value": "7",
+									"description": "Month (1-12)"
+								},
+								{
+									"key": "tahun",
+									"value": "2025",
+									"description": "Year"
+								}
+							]
+						},
+						"description": "Get outpatient doctor care records filtered by month and year"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Care Types",
+			"item": [
+				{
+					"name": "Get Inpatient Care Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/jns-perawatan-inap",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"jns-perawatan-inap"
+							]
+						},
+						"description": "Get all inpatient care types (no parameters required)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Care Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/jns-perawatan",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"jns-perawatan"
+							]
+						},
+						"description": "Get all care types (no parameters required)"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
