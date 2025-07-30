@@ -98,11 +98,48 @@ return [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
             'handler' => StreamHandler::class,
-            'handler_with' => [
+            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'with' => [
                 'stream' => 'php://stderr',
             ],
-            'formatter' => env('LOG_STDERR_FORMATTER'),
             'processors' => [PsrLogMessageProcessor::class],
+        ],
+
+        // API Activity Logging Channels
+        'api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api/api-activity.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => env('LOG_DAILY_DAYS', 30),
+            'replace_placeholders' => true,
+            'permission' => 0664,
+        ],
+
+        'api_errors' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api/api-errors.log'),
+            'level' => 'error',
+            'days' => env('LOG_DAILY_DAYS', 30),
+            'replace_placeholders' => true,
+            'permission' => 0664,
+        ],
+
+        'api_access' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api/api-access.log'),
+            'level' => 'info',
+            'days' => env('LOG_DAILY_DAYS', 30),
+            'replace_placeholders' => true,
+            'permission' => 0664,
+        ],
+
+        'api_security' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api/api-security.log'),
+            'level' => 'warning',
+            'days' => env('LOG_DAILY_DAYS', 60),
+            'replace_placeholders' => true,
+            'permission' => 0664,
         ],
 
         'syslog' => [

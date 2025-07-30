@@ -1,6 +1,6 @@
 # 🏥 RSAZ Medical Records API
 
-API untuk mengakses data rekam medis RSAZ dengan sistem autentikasi token.
+API untuk mengakses data rekam medis RSAZ dengan sistem autentikasi token dan comprehensive logging system.
 
 ## 📋 Overview
 
@@ -10,6 +10,15 @@ API ini menyediakan akses ke 5 tabel utama dalam database rekam medis:
 - **Rawat Jalan Dokter** - Data perawatan rawat jalan (dengan parameter bulan & tahun)
 - **Jenis Perawatan Inap** - Master data jenis perawatan inap (tanpa parameter)
 - **Jenis Perawatan** - Master data jenis perawatan (tanpa parameter)
+
+## 🚀 Key Features
+
+- ✅ **Token-based Authentication** dengan sistem expiry
+- 📊 **Comprehensive Logging System** untuk monitoring dan security
+- 🔒 **Security Middleware** dengan rate limiting
+- 📈 **Real-time Monitoring** dan analytics
+- 🛠️ **Management Commands** untuk maintenance
+- 📝 **Detailed API Documentation** dengan Postman collection
 
 ## 🔧 Setup & Installation
 
@@ -201,7 +210,65 @@ Semua response menggunakan format JSON standar:
 }
 ```
 
-## 🚨 Error Codes
+## � API Logging & Monitoring
+
+API ini dilengkapi dengan sistem logging komprehensif untuk monitoring, security, dan analytics:
+
+### Log Channels
+- **api**: General activity logs (30 hari retention)
+- **api_access**: Access patterns dan authentication (60 hari retention)
+- **api_security**: Security events dan anomali (90 hari retention)
+- **api_errors**: Error tracking dan debugging (60 hari retention)
+
+### Management Commands
+
+#### Real-time Monitoring
+```bash
+# Monitor general activity
+php artisan api:monitor-logs --channel=api
+
+# Monitor security events
+php artisan api:monitor-logs --channel=api_security
+
+# Monitor dengan filter tertentu
+php artisan api:monitor-logs --channel=api --filter="pegawai"
+```
+
+#### Analytics & Statistics
+```bash
+# Analisis penggunaan 7 hari terakhir
+php artisan api:analyze-logs
+
+# Analisis tanggal spesifik
+php artisan api:analyze-logs --date=2024-01-15
+
+# Export ke CSV untuk reporting
+php artisan api:analyze-logs --output=csv
+```
+
+#### Testing & Maintenance
+```bash
+# Test logging system
+php artisan api:test-logging
+
+# Clear old logs (30+ days)
+php artisan api:clear-logs --days=30
+
+# Clear specific channel
+php artisan api:clear-logs --channel=api_errors
+```
+
+### Log Information Tracked
+- Request/response details dan timing
+- IP addresses dan user agents
+- Authentication events dan token usage
+- Error patterns dan security violations
+- Performance metrics dan response times
+- API usage statistics dan patterns
+
+**📋 Detail dokumentasi logging**: Lihat file `API_LOGGING_GUIDE.md`
+
+## �🚨 Error Codes
 
 - `400` - Bad Request (missing parameters)
 - `401` - Unauthorized (invalid/missing token)
